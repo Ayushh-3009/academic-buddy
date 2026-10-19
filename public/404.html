@@ -28,7 +28,7 @@
 
       <div class="nav-actions">
         <!-- Theme Toggle -->
-        <button class="theme-toggle-btn" aria-label="Toggle Theme">
+        <button class="theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme">
           <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -46,47 +46,132 @@
 
   <main class="page-404-wrapper">
     <div class="page-404-card">
-      <div class="illustration-404">🎒☕📖</div>
-      <div class="code-404">ERROR 404 • CONCEPT NOT FOUND</div>
-      <h1 style="font-size: clamp(1.8rem, 4vw, 2.4rem); margin-bottom: 0.75rem;">
-        Looks like these notes got lost at the bottom of your backpack...
-      </h1>
-      <p style="margin-bottom: 2rem;">
-        Even Studi's neural networks couldn't locate this page. Maybe the link was eaten by your neighbor's dog, or perhaps you took a wrong turn in the library stacks.
-      </p>
-
-      <!-- Quick Search / Re-orient -->
-      <div style="max-width: 440px; margin: 0 auto 2rem auto; display: flex; gap: 0.5rem;">
-        <input type="text" class="form-input" placeholder="Search a subject (e.g. Calculus, Bio, SAT)..." id="search-input" style="flex: 1;">
-        <button class="btn btn-primary" onclick="handleSearch()">Search</button>
+      
+      <!-- Mascot / Visual Anchor -->
+      <div class="mascot-404-box">
+        <div class="mascot-404-avatar" title="Studi the Coffee Mug searching for notes">
+          ☕
+        </div>
+        <div class="mascot-status-tag">
+          <span class="pulse-dot-peach"></span>
+          <span>HTTP 404 • Concept Expelled from Syllabus</span>
+        </div>
       </div>
 
-      <!-- Quick Action Buttons -->
+      <h1 class="page-404-title">
+        Looks like these notes got lost at the bottom of your backpack...
+      </h1>
+      <p class="page-404-desc">
+        Even Studi's neural networks couldn't locate this page. Maybe the link was eaten by your neighbor's golden retriever, or you took an accidental detour through the library stacks.
+      </p>
+
+      <!-- Interactive Humorous Diagnostic Checklist -->
+      <div class="diagnostic-box">
+        <div class="diagnostic-header">
+          <span>📋 Studi's Emergency Diagnostic Checklist</span>
+          <span class="diagnostic-tag">Select Your Excuse</span>
+        </div>
+        <div class="diagnostic-grid">
+          <button type="button" class="diagnostic-option-btn" onclick="diagnoseIssue('dog')">
+            <span class="diagnostic-emoji">🐶</span>
+            <span>"My dog ate the syllabus link"</span>
+          </button>
+          <button type="button" class="diagnostic-option-btn" onclick="diagnoseIssue('nap')">
+            <span class="diagnostic-emoji">😴</span>
+            <span>"Accidental 3-hour power nap"</span>
+          </button>
+          <button type="button" class="diagnostic-option-btn" onclick="diagnoseIssue('midterm')">
+            <span class="diagnostic-emoji">📄</span>
+            <span>"This was NOT on the study guide"</span>
+          </button>
+          <button type="button" class="diagnostic-option-btn" onclick="diagnoseIssue('coffee')">
+            <span class="diagnostic-emoji">☕</span>
+            <span>"Severe caffeine deficiency"</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Search / Re-orient -->
+      <form class="page-404-search-box" onsubmit="handleSearch(event)">
+        <input 
+          type="text" 
+          class="form-input" 
+          placeholder="Search a subject (e.g. Calculus, Bio, SAT)..." 
+          id="search-input" 
+          style="flex: 1;"
+          autocomplete="off"
+        >
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <!-- Quick Subject Shortcut Pills -->
+      <div class="quick-subjects-row">
+        <span>Quick teleport:</span>
+        <a href="index.html#subjects" class="subject-pill-link">📐 Calculus</a>
+        <a href="index.html#subjects" class="subject-pill-link">🧬 Biology</a>
+        <a href="index.html#subjects" class="subject-pill-link">📜 History</a>
+        <a href="index.html#subjects" class="subject-pill-link">🐍 Python</a>
+        <a href="index.html#subjects" class="subject-pill-link">🧪 Chemistry</a>
+      </div>
+
+      <!-- Action Buttons -->
       <div style="display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap;">
         <a href="index.html" class="btn btn-primary">
           <span>Return Home</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </a>
         <a href="index.html#interactive-demo" class="btn btn-secondary">
-          <span>Try Flashcard Deck</span>
+          <span>☕ Study with Studi</span>
         </a>
         <a href="index.html#faq" class="btn btn-ghost">
           <span>Read FAQ</span>
         </a>
       </div>
+
+      <!-- Footer Keyboard Shortcut Tip -->
+      <div class="page-404-footer-tip">
+        <span>💡 Pro-tip: Press <kbd style="background:var(--bg-card-subtle); border:1px solid var(--border-strong); padding:0.15rem 0.4rem; border-radius:4px; font-weight:700;">H</kbd> anytime to return to your study desk.</span>
+      </div>
+
     </div>
   </main>
 
   <script src="script.js"></script>
   <script>
-    function handleSearch() {
+    function diagnoseIssue(reason) {
+      const responses = {
+        dog: "🐶 Studi: 'Classic excuse! Even your dog knows chapter 4 is crucial. Let's get you back to the desk!'",
+        nap: "😴 Studi: 'A 20-minute power nap turned into deep REM cycle 4! Drink some cold water and head home!'",
+        midterm: "📄 Studi: 'The professor promised it was only chapters 1-3... yet here we are at 404!'",
+        coffee: "☕ Studi: 'Administering emergency virtual espresso ☕✨! Brain recharged. Ready to study!'"
+      };
+      const msg = responses[reason] || "☕ Studi: 'Don't worry, every student loses their notes once in a while!'";
+      if (typeof window.showToast === 'function') {
+        window.showToast(msg);
+      } else {
+        alert(msg);
+      }
+    }
+
+    function handleSearch(e) {
+      if (e) e.preventDefault();
       const q = document.getElementById('search-input').value.trim();
       if (q) {
         window.location.href = `index.html#subjects`;
       } else {
-        showToast('💡 Type a topic above to explore our subject guides!');
+        if (typeof window.showToast === 'function') {
+          window.showToast('💡 Type a topic above to explore our subject guides!');
+        }
       }
     }
+
+    // Keyboard shortcut 'H' to return home
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'h' || e.key === 'H') {
+        window.location.href = 'index.html';
+      }
+    });
   </script>
 </body>
 </html>
