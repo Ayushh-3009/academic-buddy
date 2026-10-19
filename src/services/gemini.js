@@ -67,8 +67,10 @@ It looks like the server is running, but the \`GEMINI_API_KEY\` hasn't been set 
   const candidateModels = [
     config.gemini.model,
     'gemini-3.5-flash-lite',
-    'gemini-3.6-flash',
     'gemini-3.5-flash',
+    'gemini-flash-lite-latest',
+    'gemini-3-flash-preview',
+    'gemini-3.6-flash',
   ].filter((m, idx, arr) => m && arr.indexOf(m) === idx);
 
   // Format conversation history for Gemini SDK
