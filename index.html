@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Buddy | The Cozy, Modern AI Study Companion</title>
+  <meta name="description" content="Academic Buddy (Studi) is the friendly AI study buddy for high school and college students that helps you truly understand concepts, build flashcards, and master exams—without cheating.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Markdown & KaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       SECTION 1: STICKY NAVIGATION BAR
+       ======================================================================== -->
+  <header class="navbar" id="main-nav">
+    <div class="container nav-container">
+      <!-- Logo & Brand Mascot -->
+      <a href="#hero" class="brand-logo" aria-label="Academic Buddy Home">
+        <div class="brand-icon">
+          <!-- Cozy Study Spark / Lamp Logo SVG -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+          </svg>
+        </div>
+        <span>Academic<span class="text-gradient">Buddy</span></span>
+        <span class="brand-badge">Meet Studi ☕</span>
+      </a>
+
+      <!-- Desktop Nav Links (Restructured as Actual Buttons with Curved Edges) -->
+      <nav class="nav-curved-island" aria-label="Primary Navigation">
+        <ul class="nav-buttons-group">
+          <li><a href="#features" class="nav-btn-curved">Features</a></li>
+          <li><a href="#how-it-works" class="nav-btn-curved">How It Works</a></li>
+          <li><a href="#interactive-demo" class="nav-btn-curved">Live Demo</a></li>
+          <li><a href="#subjects" class="nav-btn-curved">Subjects</a></li>
+          <li><a href="#study-modes" class="nav-btn-curved">Modes</a></li>
+          <li><a href="#faq" class="nav-btn-curved">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <!-- Nav Actions (Theme Toggle, Auth, CTA with Curved Edges) -->
+      <div class="nav-actions">
+        <!-- Theme Toggle: Light vs Late-Night Study Mode -->
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Late-Night Study Dark Mode" title="Toggle Light / Late-Night Mode">
+          <!-- Sun Icon (shown in dark mode) -->
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <!-- Moon Icon (shown in light mode) -->
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Launch Study Window Trigger (Curved Button) -->
+        <button class="btn btn-secondary nav-action-btn" id="btn-nav-open-chat" title="Open AI Study Window">
+          <span>💬 Study Window</span>
+        </button>
+
+        <!-- Logged In User Pill -->
+        <div id="nav-user-pill" class="nav-user-pill" style="display: none;">
+          <span class="nav-user-avatar" id="nav-user-avatar">AL</span>
+          <span id="nav-user-name">Alex</span>
+          <button class="btn-nav-logout" id="btn-nav-logout" title="Sign out" aria-label="Sign out">🚪</button>
+        </div>
+
+        <!-- Log In Modal Trigger (Curved Button) -->
+        <button class="btn btn-secondary nav-action-btn" data-open-modal="auth" id="btn-nav-login">Log in</button>
+
+        <!-- Primary CTA Trigger (Curved Button) -->
+        <button class="btn btn-primary nav-action-btn" data-open-modal="onboarding" id="btn-nav-signup">
+          <span>Start Studying Free</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="mobile-toggle-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation">
+    <ul class="mobile-nav-links">
+      <li><a href="#hero" class="nav-btn-curved" id="btn-mobile-open-chat">💬 Open AI Tutor Window</a></li>
+      <li><a href="#features" class="nav-btn-curved">Features</a></li>
+      <li><a href="#how-it-works" class="nav-btn-curved">How It Works</a></li>
+      <li><a href="#interactive-demo" class="nav-btn-curved">Interactive Demo</a></li>
+      <li><a href="#subjects" class="nav-btn-curved">Subjects & Levels</a></li>
+      <li><a href="#study-modes" class="nav-btn-curved">Study Modes</a></li>
+      <li><a href="#progress" class="nav-btn-curved">Progress & Streaks</a></li>
+      <li><a href="#faq" class="nav-btn-curved">FAQ</a></li>
+      <li><a href="404.html" class="nav-btn-curved">404 Study Break Page</a></li>
+    </ul>
+    <div class="mobile-nav-actions">
+      <div id="mobile-user-pill" class="nav-user-pill" style="display: none; width: 100%; justify-content: space-between; padding: 0.5rem 0.85rem; margin-bottom: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span class="nav-user-avatar" id="mobile-user-avatar">AL</span>
+          <span id="mobile-user-name" style="font-weight: 700;">Alex</span>
+        </div>
+        <button class="btn-nav-logout" id="btn-mobile-logout" title="Sign out" aria-label="Sign out">Sign out 🚪</button>
+      </div>
+      <button class="btn btn-secondary nav-action-btn" style="width: 100%;" data-open-modal="auth" id="btn-mobile-login">Log in</button>
+      <button class="btn btn-primary nav-action-btn" style="width: 100%;" data-open-modal="onboarding" id="btn-mobile-signup">Start Studying Free</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- ========================================================================
+         SECTION 2: HERO SECTION
+         ======================================================================== -->
+    <section class="hero-section" id="hero">
+      <div class="hero-glow-1"></div>
+      <div class="hero-glow-2"></div>
+
+      <div class="container hero-grid">
+        <!-- Left: Copy & CTAs -->
+        <div class="hero-content">
+          <div class="hero-pill">
+            <span class="pulse-dot"></span>
+            <span>Say hello to <strong>Studi</strong> — your 24/7 AI pair-learner</span>
+          </div>
+
+          <h1 class="hero-title">
+            The AI study buddy who actually helps you <span class="text-gradient">understand</span>, not just cheat.
+          </h1>
+
+          <p class="hero-subtitle">
+            Tired of robotic answers and late-night panic? Academic Buddy breaks down impossible concepts step-by-step, turns messy lecture slides into active flashcards, and coaches you to conquer exams with real confidence.
+          </p>
+
+          <div class="hero-cta-group">
+            <button class="btn btn-primary btn-lg" id="btn-hero-launch-chat">
+              <span>💬 Ask Studi (Open Window)</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="hero-trust-bar">
+            <div class="trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Free to start</span>
+            </div>
+            <div class="trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>No credit card</span>
+            </div>
+            <div class="trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>COPPA & FERPA Safe</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Live-Looking Cozy Study Chat Mockup -->
+        <div class="hero-mockup-wrapper">
+          <!-- Cozy Desk Illustration Motifs -->
+          <div class="desk-element desk-mug" title="Cozy Study Session In Progress">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+              <line x1="6" y1="1" x2="6" y2="4"></line>
+              <line x1="10" y1="1" x2="10" y2="4"></line>
+              <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
+            <span>Matcha Latte • 11:42 PM</span>
+          </div>
+
+          <div class="desk-element desk-badge">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <div>
+              <div style="font-size:0.72rem; color:var(--text-muted);">Current Streak</div>
+              <div style="color:var(--text-primary); font-weight:800;">14 Days Strong 🔥</div>
+            </div>
+          </div>
+
+          <!-- The Live Chat Card (Clickable to Launch Window) -->
+          <div class="chat-card" id="hero-chat-card-launch" style="cursor: pointer; position: relative;" title="Click to open live AI Study Window!">
+            <!-- Window Header -->
+            <div class="chat-header">
+              <div class="chat-user-info">
+                <div class="studi-avatar-glow">
+                  <!-- Studi Friendly Robot Mascot SVG -->
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <path d="M12 7v4"></path>
+                    <line x1="8" y1="16" x2="8.01" y2="16"></line>
+                    <line x1="16" y1="16" x2="16.01" y2="16"></line>
+                  </svg>
+                </div>
+                <div>
+                  <div class="chat-user-title">Studi <span style="font-size:0.75rem; color:var(--text-muted); font-weight:500;">(Your AI Study Buddy)</span></div>
+                  <div class="chat-user-status">
+                    <span style="width:6px; height:6px; border-radius:50%; background:currentColor;"></span>
+                    Online • AP Biology Prep
+                  </div>
+                </div>
+              </div>
+              <div class="chat-window-dots">
+                <span class="window-dot dot-red"></span>
+                <span class="window-dot dot-yellow"></span>
+                <span class="window-dot dot-green"></span>
+              </div>
+            </div>
+
+            <!-- Chat Messages Body -->
+            <div class="chat-body">
+              <!-- Student Message -->
+              <div class="chat-msg msg-student">
+                <div>Hey Studi, my teacher said enzyme inhibition will be 40% of tomorrow's exam and my brain is totally fried. Can you explain competitive vs non-competitive without the textbook jargon? 😭</div>
+                <div class="msg-meta">11:41 PM • Alex</div>
+              </div>
+
+              <!-- Studi Friendly Response -->
+              <div class="chat-msg msg-studi">
+                <p>Take a breath, Alex! You've got this. Let's imagine an arcade claw machine: 🕹️</p>
+                <div class="studi-concept-card">
+                  <div class="concept-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span>The Key Difference</span>
+                  </div>
+                  <p style="margin-bottom: 0.4rem;"><strong>1. Competitive:</strong> A fake coin jams the slot where real coins go (competes for the <em>active site</em>). If you dump 100 real coins in, you can out-compete it!</p>
+                  <p><strong>2. Non-competitive:</strong> Someone kicks the plug out of the wall (binds to an <em>allosteric site</em>). Doesn't matter how many coins you have—the machine changes shape and stops working.</p>
+                </div>
+                <p style="margin-top: 0.65rem;">Quick test: What happens to the maximum reaction speed (Vmax) when you add more substrate in non-competitive inhibition? 🎯</p>
+
+                <div class="chat-quick-actions">
+                  <span class="quick-action-pill">A) It recovers fully</span>
+                  <span class="quick-action-pill">B) It remains lower</span>
+                  <span class="quick-action-pill">C) Give me a hint 💡</span>
+                </div>
+              </div>
+
+              <!-- Typing Indicator -->
+              <div class="typing-indicator" style="margin-top: 0.25rem;">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ========================================================================
+         SECTION 4: FEATURES GRID (8 COMPLETE FEATURES)
+         ======================================================================== -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Supercharged Study Arsenal</span>
+          <h2 class="section-title">Everything you need to turn confusion into <span class="text-gradient">straight A's</span></h2>
+          <p class="section-desc">Designed alongside cognitive psychologists and student power-users to make studying feel lighter, faster, and infinitely more rewarding.</p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Feature 1: AI Tutor Chat -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-title">24/7 Socratic AI Tutor</h3>
+            <p class="feature-desc">Never get stuck at 2 AM again. Studi talks you through thorny math problems, coding bugs, and lab reports without giving away lazy answers.</p>
+            <span class="feature-pill-badge">Mode: Socratic Dialog</span>
+          </div>
+
+          <!-- Feature 2: Instant Flashcards -->
+          <div class="feature-card">
+            <div class="feature-icon-box icon-peach">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <h3 class="feature-title">Instant Spaced Flashcards</h3>
+            <p class="feature-desc">Turn 60 textbook pages into an intelligent Leitner flashcard deck in 5 seconds. Smarter spaced repetition ensures you remember come finals.</p>
+            <span class="feature-pill-badge">Leitner Algorithm</span>
+          </div>
+
+          <!-- Feature 3: Auto-Generated Quizzes -->
+          <div class="feature-card">
+            <div class="feature-icon-box icon-sage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-title">Auto-Generated Quizzes</h3>
+            <p class="feature-desc">Simulate actual test conditions with multiple-choice, free-response, and AP-style prompts that predict where you'll lose points before your teacher does.</p>
+            <span class="feature-pill-badge">AP & College Rubric</span>
+          </div>
+
+          <!-- Feature 4: Note Summarizer -->
+          <div class="feature-card">
+            <div class="feature-icon-box icon-cyan">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">Multimodal Note Summarizer</h3>
+            <p class="feature-desc">Upload messy PDF syllabi, 90-slide PowerPoint presentations, or messy whiteboard snapshots. Get organized bullet summaries and key formula cheat sheets.</p>
+            <span class="feature-pill-badge">OCR & Slide Parser</span>
+          </div>
+
+          <!-- Feature 5: Study Planner & Deadline Tracker -->
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">Smart Study Schedule</h3>
+            <p class="feature-desc">Upload your syllabus and let Studi build a gentle, non-stressful day-by-day roadmap that adapts automatically whenever life or social plans get in the way.</p>
+            <span class="feature-pill-badge">Anti-Burnout Sync</span>
+          </div>
+
+          <!-- Feature 6: Pomodoro Focus Timer -->
+          <div class="feature-card">
+            <div class="feature-icon-box icon-peach">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-title">Cozy Pomodoro & Lofi Audio</h3>
+            <p class="feature-desc">Stay in flow with customizable 25/5 focus intervals, soft ambient rain, fireplace crackles, and gentle notifications to stretch and drink water.</p>
+            <span class="feature-pill-badge">Ambient Audio Desk</span>
+          </div>
+
+          <!-- Feature 7: Explain-It-Simply Mode -->
+          <div class="feature-card">
+            <div class="feature-icon-box icon-sage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <h3 class="feature-title">5-Level "Explain-It-Simply"</h3>
+            <p class="feature-desc">Toggle the complexity of any tough concept between 5 intuitive tiers: ELI5, Middle School, High School, AP/Honors, and Rigorous Undergrad proof.</p>
+            <span class="feature-pill-badge">Adaptive Comprehension</span>
+          </div>
+
+          <!-- Feature 8: Voice Study Mode -->
+          <div class="feature-card">
+            <div class="feature-icon-box icon-cyan">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">Hands-Free Voice Study Mode</h3>
+            <p class="feature-desc">Review your flashcards and test vocab while walking your dog, riding the bus, or folding laundry with natural conversational voice audio.</p>
+            <span class="feature-pill-badge">Bilateral Audio Flow</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 5: HOW IT WORKS (3-4 STEP VISUAL FLOW)
+         ======================================================================== -->
+    <section class="section section-alt" id="how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Dead-Simple Workflow</span>
+          <h2 class="section-title">From overwhelmed to exam-ready in <span class="text-gradient">4 simple steps</span></h2>
+          <p class="section-desc">No complicated configuration. Drop in your messy syllabus, slides, or study questions and get straight into flow state.</p>
+        </div>
+
+        <div class="how-it-works-timeline">
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number-badge">1</div>
+              <span class="step-icon-subtle">📂</span>
+            </div>
+            <h3 class="step-title">Upload your material</h3>
+            <p class="step-desc">Drop your lecture slides, textbook chapter PDF, or snap a quick photo of your handwritten notebook.</p>
+            <div class="step-snippet">
+              <span>📄 Bio_Midterm_Review.pdf</span>
+              <span style="margin-left:auto; color:var(--accent-sage);">Parsed ✓</span>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number-badge" style="background: linear-gradient(135deg, var(--accent-peach) 0%, #EA580C 100%);">2</div>
+              <span class="step-icon-subtle">🎯</span>
+            </div>
+            <h3 class="step-title">Ask or choose a mode</h3>
+            <p class="step-desc">Pick what you need today: a deep Socratic walkthrough, rapid active-recall flashcards, or a high-yield formula summary.</p>
+            <div class="step-snippet">
+              <span>Mode: "Teach It Back"</span>
+              <span style="margin-left:auto; color:var(--accent-peach);">Active</span>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number-badge" style="background: linear-gradient(135deg, var(--accent-sage) 0%, #059669 100%);">3</div>
+              <span class="step-icon-subtle">🧠</span>
+            </div>
+            <h3 class="step-title">Practice and quiz</h3>
+            <p class="step-desc">Studi quizzes you on weak spots, gives real-time guidance when you miss a question, and never lets you rely on passive re-reading.</p>
+            <div class="step-snippet">
+              <span>Active Recall Deck</span>
+              <span style="margin-left:auto; color:var(--accent-primary);">12/15 Mastered</span>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number-badge" style="background: linear-gradient(135deg, var(--accent-cyan) 0%, #0284C7 100%);">4</div>
+              <span class="step-icon-subtle">📈</span>
+            </div>
+            <h3 class="step-title">Track your progress</h3>
+            <p class="step-desc">Watch your topic mastery score climb toward 100%, keep your study streak burning bright, and walk into class relaxed.</p>
+            <div class="step-snippet">
+              <span>Readiness: 94%</span>
+              <span style="margin-left:auto; color:var(--accent-sage);">Exam Ready ⭐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 6: INTERACTIVE DEMO SECTION (CLICKABLE WIDGET)
+         ======================================================================== -->
+    <section class="section" id="interactive-demo">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Test Drive Right Now</span>
+          <h2 class="section-title">See Studi in action with <span class="text-gradient">zero signup</span></h2>
+          <p class="section-desc">Click through the live widgets below to experience how Studi breaks down complex topics, flips flashcards, and quizzes your knowledge.</p>
+        </div>
+
+        <div class="demo-widget-wrapper">
+          <!-- Widget Navigation Tabs -->
+          <div class="demo-widget-tabs" role="tablist">
+            <button class="demo-tab-btn active" data-target="demo-pane-chat" role="tab" aria-selected="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>1. Live AI Tutor Chat</span>
+            </button>
+            <button class="demo-tab-btn" data-target="demo-pane-cards" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              <span>2. 3D Flashcard Deck</span>
+            </button>
+            <button class="demo-tab-btn" data-target="demo-pane-quiz" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              <span>3. Smart Practice Quiz</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: Live Interactive AI Tutor Studio Launchpad -->
+          <div class="demo-tab-content active" id="demo-pane-chat">
+            <div class="studio-hub-container">
+              <div class="studio-hub-header">
+                <div class="studio-hub-badge">
+                  <span class="pulse-dot"></span>
+                  <span>Studi AI Pair-Learner • Live &amp; Ready</span>
+                </div>
+                <h3 class="studio-hub-title">Study in a <span class="text-gradient">Focused Window</span> or Full Screen</h3>
+                <p class="studio-hub-desc">
+                  No more getting lost scrolling down. Open Studi in an elevated desktop study window or expand to 100% full screen for zero distractions during homework, AP cramming, or active recall drills.
+                </p>
+
+                <div class="studio-hub-actions">
+                  <button class="btn btn-primary btn-lg" id="btn-hub-open-window">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Open AI Tutor Window</span>
+                  </button>
+
+                  <button class="btn btn-secondary btn-lg" id="btn-hub-open-fullscreen">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    <span>Launch in Full Screen (⛶)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Quick Mode Jump Cards -->
+              <div class="studio-hub-modes-grid">
+                <button class="hub-mode-card" data-mode="learn" title="Launch Socratic Learn Mode">
+                  <div class="hub-mode-icon">💡</div>
+                  <div class="hub-mode-info">
+                    <h4>Learn (Socratic)</h4>
+                    <p>Guides step-by-step with hints, analogies &amp; checks.</p>
+                  </div>
+                  <span class="hub-mode-arrow">→</span>
+                </button>
+
+                <button class="hub-mode-card" data-mode="quiz-me" title="Launch Quiz Me Mode">
+                  <div class="hub-mode-icon">⚡</div>
+                  <div class="hub-mode-info">
+                    <h4>Quiz Me</h4>
+                    <p>One question at a time with instant hints &amp; scoring.</p>
+                  </div>
+                  <span class="hub-mode-arrow">→</span>
+                </button>
+
+                <button class="hub-mode-card" data-mode="teach-it-back" title="Launch Teach It Back Mode">
+                  <div class="hub-mode-icon">🗣️</div>
+                  <div class="hub-mode-info">
+                    <h4>Teach It Back</h4>
+                    <p>Explain in your own words; Studi spots gaps.</p>
+                  </div>
+                  <span class="hub-mode-arrow">→</span>
+                </button>
+
+                <button class="hub-mode-card" data-mode="exam-crunch" title="Launch Exam Crunch Mode">
+                  <div class="hub-mode-icon">🔥</div>
+                  <div class="hub-mode-info">
+                    <h4>Exam Crunch</h4>
+                    <p>High-yield formula review, cram summaries &amp; quick sets.</p>
+                  </div>
+                  <span class="hub-mode-arrow">→</span>
+                </button>
+
+                <button class="hub-mode-card" data-mode="chill-review" title="Launch Chill Review Mode">
+                  <div class="hub-mode-icon">🎧</div>
+                  <div class="hub-mode-info">
+                    <h4>Chill Review</h4>
+                    <p>Casual, low-stress recaps with memorable metaphors.</p>
+                  </div>
+                  <span class="hub-mode-arrow">→</span>
+                </button>
+              </div>
+
+              <!-- Quick Prompts Preview -->
+              <div class="studio-hub-prompts">
+                <span class="hub-prompts-label">Or click a sample question to start immediately:</span>
+                <div class="hub-prompts-list">
+                  <button class="hub-prompt-pill" data-prompt="Explain Mitochondria and ATP synthesis using an everyday analogy" data-mode="learn">🧬 Mitochondria &amp; ATP Analogy</button>
+                  <button class="hub-prompt-pill" data-prompt="Why does the Chain Rule in Calculus make intuitive sense? Explain with bike gears" data-mode="learn">📐 Calculus Chain Rule</button>
+                  <button class="hub-prompt-pill" data-prompt="Give me a 5-question active recall drill on Cell Division (Mitosis vs Meiosis)" data-mode="quiz-me">⚡ Quiz: Mitosis vs Meiosis</button>
+                  <button class="hub-prompt-pill" data-prompt="I will explain how HTTP status codes work. Tell me if I get anything wrong!" data-mode="teach-it-back">🗣️ Teach: HTTP Codes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Interactive 3D Flashcard Deck -->
+          <div class="demo-tab-content" id="demo-pane-cards">
+            <div class="flashcard-stage">
+              <div class="flashcard-card-3d" id="flashcard-card-3d" title="Click or press Space to flip">
+                <div class="flashcard-inner" id="flashcard-card-inner">
+                  <!-- Front Side -->
+                  <div class="flashcard-front">
+                    <div class="card-tag" id="flashcard-tag">CALCULUS (BC)</div>
+                    <div class="card-question" id="flashcard-question">What is the derivative of ln(x) with respect to x?</div>
+                    <div class="card-hint">💡 Click or tap card to flip & reveal answer</div>
+                  </div>
+                  <!-- Back Side -->
+                  <div class="flashcard-back">
+                    <div class="card-tag" style="color:var(--accent-sage);">ANSWER & INTUITION</div>
+                    <div class="card-answer" id="flashcard-answer">d/dx [ln(x)] = 1/x (for x &gt; 0)</div>
+                    <div class="card-hint" style="color:var(--text-secondary);">Because logarithmic growth flattens as x expands, its slope diminishes inversely!</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flashcard-controls">
+                <span id="flashcard-counter" style="font-family:var(--font-mono); font-size:0.86rem; color:var(--text-muted);">Card 1 of 4</span>
+                <button class="btn btn-secondary btn-sm" id="flashcard-flip-btn">Flip Card</button>
+                <button class="btn btn-secondary btn-sm" id="flashcard-next-btn">Next Card →</button>
+                <button class="btn btn-peach btn-sm" id="flashcard-got-it-btn">Mastered (+15 XP)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Interactive Practice Quiz -->
+          <div class="demo-tab-content" id="demo-pane-quiz">
+            <div class="demo-quiz-box">
+              <div class="quiz-question-header" id="quiz-header-text">
+                Which neurotransmitter is primarily responsible for learning, memory consolidation, and long-term potentiation?
+              </div>
+
+              <div class="quiz-options">
+                <button class="quiz-opt-btn" data-index="0">
+                  <span>A. <span class="quiz-label">Dopamine</span></span>
+                  <span class="quiz-result-icon"></span>
+                </button>
+                <button class="quiz-opt-btn" data-index="1">
+                  <span>B. <span class="quiz-label">Glutamate</span></span>
+                  <span class="quiz-result-icon"></span>
+                </button>
+                <button class="quiz-opt-btn" data-index="2">
+                  <span>C. <span class="quiz-label">GABA</span></span>
+                  <span class="quiz-result-icon"></span>
+                </button>
+                <button class="quiz-opt-btn" data-index="3">
+                  <span>D. <span class="quiz-label">Melatonin</span></span>
+                  <span class="quiz-result-icon"></span>
+                </button>
+              </div>
+
+              <div class="quiz-explanation-box" id="quiz-explanation-box"></div>
+
+              <div style="display:flex; justify-content:flex-end; margin-top:1.25rem;">
+                <button class="btn btn-secondary btn-sm" id="quiz-next-btn">Try Another Question →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 7: SUBJECTS AND LEVELS
+         ======================================================================== -->
+    <section class="section section-alt" id="subjects">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">High School to Undergrad</span>
+          <h2 class="section-title">Whatever you're studying, Studi has your back</h2>
+          <p class="section-desc">From high school algebra and AP European History to college organic chemistry and data structures.</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="subjects-filter-bar">
+          <button class="subject-filter-btn active" data-filter="all">All Subjects</button>
+          <button class="subject-filter-btn" data-filter="math">Math</button>
+          <button class="subject-filter-btn" data-filter="stem">Science</button>
+          <button class="subject-filter-btn" data-filter="humanities">History & Writing</button>
+          <button class="subject-filter-btn" data-filter="code">Coding</button>
+          <button class="subject-filter-btn" data-filter="languages">Languages</button>
+          <button class="subject-filter-btn" data-filter="testprep">Test Prep</button>
+        </div>
+
+        <!-- Subject Cards Grid -->
+        <div class="subjects-cards-grid">
+          <!-- Math -->
+          <div class="subject-card" data-category="math" data-mode="learn" tabindex="0" role="button" aria-label="Open Studi chat for Mathematics">
+            <div class="subject-card-header">
+              <h3 style="font-size: 1.2rem;">📐 Mathematics</h3>
+              <span class="subject-badge">HS &amp; College</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Algebra, Geometry, Precalculus, Calculus AB/BC, Multivariable, Linear Algebra, and Statistics.</p>
+            <div class="subject-topics-list">
+              <span class="topic-tag">Step-by-step proofs</span>
+              <span class="topic-tag">LaTeX formulas</span>
+              <span class="topic-tag">Intuitive graphing</span>
+            </div>
+            <div class="subject-sample-prompt">"Help me visualize the cross product of two 3D vectors without just memorizing determinants."</div>
+            <div class="subject-card-footer">
+              <span class="subject-card-cta">Ask Studi about this 💬</span>
+              <span class="subject-card-arrow">→</span>
+            </div>
+          </div>
+
+          <!-- Science -->
+          <div class="subject-card" data-category="stem" data-mode="learn" tabindex="0" role="button" aria-label="Open Studi chat for Natural Sciences">
+            <div class="subject-card-header">
+              <h3 style="font-size: 1.2rem;">🔬 Natural Sciences</h3>
+              <span class="subject-badge">All Levels</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">AP Biology, Chemistry, Organic Chemistry reaction mechanisms, Mechanics, Electromagnetism.</p>
+            <div class="subject-topics-list">
+              <span class="topic-tag">Reaction mechanisms</span>
+              <span class="topic-tag">Cell diagrams</span>
+              <span class="topic-tag">Free-body diagrams</span>
+            </div>
+            <div class="subject-sample-prompt">"Why does SN2 invert stereochemistry while SN1 creates a racemic mixture?"</div>
+            <div class="subject-card-footer">
+              <span class="subject-card-cta">Ask Studi about this 💬</span>
+              <span class="subject-card-arrow">→</span>
+            </div>
+          </div>
+
+          <!-- Coding -->
+          <div class="subject-card" data-category="code" data-mode="learn" tabindex="0" role="button" aria-label="Open Studi chat for Computer Science">
+            <div class="subject-card-header">
+              <h3 style="font-size: 1.2rem;">💻 Computer Science</h3>
+              <span class="subject-badge">AP CSA to CS 61B</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Python, Java, C++, JavaScript, Data Structures, Big-O Notation, algorithms, and debugging.</p>
+            <div class="subject-topics-list">
+              <span class="topic-tag">Stack traces</span>
+              <span class="topic-tag">Big-O analysis</span>
+              <span class="topic-tag">Memory diagrams</span>
+            </div>
+            <div class="subject-sample-prompt">"Why is QuickSort average O(n log n) but worst-case O(n^2)? Show me an edge-case array."</div>
+            <div class="subject-card-footer">
+              <span class="subject-card-cta">Ask Studi about this 💬</span>
+              <span class="subject-card-arrow">→</span>
+            </div>
+          </div>
+
+          <!-- Writing -->
+          <div class="subject-card" data-category="humanities" data-mode="teach-it-back" tabindex="0" role="button" aria-label="Open Studi chat for Essay & Writing Coach">
+            <div class="subject-card-header">
+              <h3 style="font-size: 1.2rem;">✍️ Essay &amp; Writing Coach</h3>
+              <span class="subject-badge">Middle to College</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Thesis refinement, argument flow, MLA/APA citations, counterargument strengthening (no ghostwriting!).</p>
+            <div class="subject-topics-list">
+              <span class="topic-tag">Thesis doctor</span>
+              <span class="topic-tag">Cohesion audit</span>
+              <span class="topic-tag">Citation checks</span>
+            </div>
+            <div class="subject-sample-prompt">"Does my paragraph transition logically from the economic impact of the New Deal to its social critiques?"</div>
+            <div class="subject-card-footer">
+              <span class="subject-card-cta">Ask Studi about this 💬</span>
+              <span class="subject-card-arrow">→</span>
+            </div>
+          </div>
+
+          <!-- Languages -->
+          <div class="subject-card" data-category="languages" data-mode="learn" tabindex="0" role="button" aria-label="Open Studi chat for World Languages">
+            <div class="subject-card-header">
+              <h3 style="font-size: 1.2rem;">🌍 World Languages</h3>
+              <span class="subject-badge">A1 to C2</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Spanish, French, Mandarin, Japanese, German, Latin. Conversational roleplay and grammar debugging.</p>
+            <div class="subject-topics-list">
+              <span class="topic-tag">Subjunctive conjugations</span>
+              <span class="topic-tag">Accent training</span>
+              <span class="topic-tag">Idiomatic slang</span>
+            </div>
+            <div class="subject-sample-prompt">"Let's roleplay ordering coffee in Madrid. Only speak to me in beginner Spanish and correct my errors kindly!"</div>
+            <div class="subject-card-footer">
+              <span class="subject-card-cta">Ask Studi about this 💬</span>
+              <span class="subject-card-arrow">→</span>
+            </div>
+          </div>
+
+          <!-- Test Prep -->
+          <div class="subject-card" data-category="testprep" data-mode="quiz-me" tabindex="0" role="button" aria-label="Open Studi chat for Standardized Test Prep">
+            <div class="subject-card-header">
+              <h3 style="font-size: 1.2rem;">🎯 Standardized Test Prep</h3>
+              <span class="subject-badge">SAT • ACT • AP • IB</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Digital SAT Reading & Math modules, ACT Science pacing, AP FRQ rubrics, IB Theory of Knowledge essays.</p>
+            <div class="subject-topics-list">
+              <span class="topic-tag">Digital SAT Desmos tricks</span>
+              <span class="topic-tag">Pacing drills</span>
+              <span class="topic-tag">AP Rubric scoring</span>
+            </div>
+            <div class="subject-sample-prompt">"Give me a hard Digital SAT geometry question on circle arc lengths with a 60-second timer."</div>
+            <div class="subject-card-footer">
+              <span class="subject-card-cta">Ask Studi about this 💬</span>
+              <span class="subject-card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 8: STUDY MODES
+         ======================================================================== -->
+    <section class="section" id="study-modes">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Tailored To Your Energy</span>
+          <h2 class="section-title">5 dynamic study modes for every mood</h2>
+          <p class="section-desc">Whether you have 48 hours until midterms or a lazy Sunday afternoon review, Studi adapts to match your mental bandwidth.</p>
+        </div>
+
+        <div class="modes-grid">
+          <!-- Mode 1 -->
+          <div class="mode-card">
+            <div class="mode-icon-circle" style="background-color: var(--accent-primary-light); color: var(--accent-primary);">
+              💡
+            </div>
+            <h3 class="mode-title">Learn</h3>
+            <div class="mode-vibe-tag">Deep Comprehension</div>
+            <p class="mode-desc">Step-by-step conversational exploration with visual analogies, real-world examples, and foundational grounding.</p>
+          </div>
+
+          <!-- Mode 2 -->
+          <div class="mode-card">
+            <div class="mode-icon-circle" style="background-color: var(--accent-peach-light); color: var(--accent-peach);">
+              ⚡
+            </div>
+            <h3 class="mode-title">Quiz Me</h3>
+            <div class="mode-vibe-tag">Active Recall</div>
+            <p class="mode-desc">Rapid adaptive questioning. Studi spots the exact questions you hesitate on and tests them again from a different angle.</p>
+          </div>
+
+          <!-- Mode 3 -->
+          <div class="mode-card">
+            <div class="mode-icon-circle" style="background-color: var(--accent-sage-light); color: var(--accent-sage);">
+              🗣️
+            </div>
+            <h3 class="mode-title">Teach It Back</h3>
+            <div class="mode-vibe-tag">Feynman Technique</div>
+            <p class="mode-desc">You play the professor! Explain the topic back to Studi, who plays the curious student and points out knowledge gaps.</p>
+          </div>
+
+          <!-- Mode 4 -->
+          <div class="mode-card">
+            <div class="mode-icon-circle" style="background-color: rgba(239, 68, 68, 0.12); color: #EF4444;">
+              🔥
+            </div>
+            <h3 class="mode-title">Exam Crunch</h3>
+            <div class="mode-vibe-tag">High Yield Only</div>
+            <p class="mode-desc">Got 4 hours left? Filters out low-yield fluff, condenses key formulas, and drills the top 20 questions most likely to be tested.</p>
+          </div>
+
+          <!-- Mode 5 -->
+          <div class="mode-card">
+            <div class="mode-icon-circle" style="background-color: var(--accent-cyan-light); color: var(--accent-cyan);">
+              🎧
+            </div>
+            <h3 class="mode-title">Chill Review</h3>
+            <div class="mode-vibe-tag">Low-Stress Audio</div>
+            <p class="mode-desc">Low cognitive pressure, cozy lofi background chords, and conversational audio flashcards for winding down before sleep.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 9: PROGRESS AND MOTIVATION (DASHBOARD PREVIEW)
+         ======================================================================== -->
+    <section class="section section-alt" id="progress">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Built For Dopamine &amp; Habit</span>
+          <h2 class="section-title">See your mastery grow in real time</h2>
+          <p class="section-desc">Study guilt is out. Clear, transparent visual progress is in. Track streaks, unlock achievements, and see your retention score soar.</p>
+        </div>
+
+        <div class="dashboard-preview-card" id="dashboard-preview-card">
+          <!-- Top Bar -->
+          <div class="dash-top-bar">
+            <div class="dash-user-welcome">
+              <div class="user-avatar-mini" id="dash-avatar-initials">AL</div>
+              <div>
+                <div style="font-weight: 800; font-size: 1.05rem;" id="dash-sanctuary-title">Alex's Study Sanctuary</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);" id="dash-user-subtitle">Junior Year • Pre-Med Track</div>
+              </div>
+            </div>
+
+            <div class="dash-stats-row">
+              <div class="dash-stat-chip">
+                <span>🔥</span>
+                <span id="dash-streak-count">14 Day Streak</span>
+              </div>
+              <div class="dash-stat-chip">
+                <span>⭐</span>
+                <span id="dash-xp-count">3,420 XP</span>
+              </div>
+              <div class="dash-stat-chip">
+                <span>⏱️</span>
+                <span id="dash-goal-text">8.5 / 10h Goal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Grid -->
+          <div class="dash-content-grid">
+            <!-- Left: Mastery Bars -->
+            <div class="mastery-bars-group">
+              <h4 style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                <span>Active Subject Mastery</span>
+                <span style="font-size: 0.82rem; font-family: var(--font-mono); color: var(--accent-sage);" id="dash-avg-retention">Avg 89% Retention</span>
+              </h4>
+
+              <!-- Dynamic Subject Mastery Container -->
+              <div id="dash-mastery-list">
+                <!-- Calculus -->
+                <div class="mastery-item">
+                  <div class="mastery-header">
+                    <span>Calculus BC: Integrals &amp; Series</span>
+                    <span style="color: var(--accent-primary); font-family: var(--font-mono);">94% Ready</span>
+                  </div>
+                  <div class="mastery-progress-bg">
+                    <div class="mastery-progress-fill fill-indigo" style="width: 94%;"></div>
+                  </div>
+                </div>
+
+                <!-- AP Bio -->
+                <div class="mastery-item">
+                  <div class="mastery-header">
+                    <span>AP Biology: Cellular Respiration</span>
+                    <span style="color: var(--accent-peach); font-family: var(--font-mono);">88% Ready</span>
+                  </div>
+                  <div class="mastery-progress-bg">
+                    <div class="mastery-progress-fill fill-peach" style="width: 88%;"></div>
+                  </div>
+                </div>
+
+                <!-- AP US History -->
+                <div class="mastery-item">
+                  <div class="mastery-header">
+                    <span>AP US History: Reconstruction Era</span>
+                    <span style="color: var(--accent-sage); font-family: var(--font-mono);">78% Ready</span>
+                  </div>
+                  <div class="mastery-progress-bg">
+                    <div class="mastery-progress-fill fill-sage" style="width: 78%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-card-subtle); border-radius: var(--radius-md); font-size: 0.88rem; display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.5rem;">☕</span>
+                <div>
+                  <strong>Studi's Daily Note:</strong> <span id="dash-studi-note">"You crushed 32 flashcards before 10 PM tonight. Get some good REM sleep so your hippocampus can lock those concepts into long-term memory!"</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Badges / Gamification -->
+            <div class="badge-showcase">
+              <h4 style="font-size: 1.05rem; margin-bottom: 0.25rem;">Earned Badges</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted);" id="dash-badges-count">6 unlocked this semester</p>
+
+              <div class="badges-grid" id="dash-badges-grid">
+                <div class="badge-item">
+                  <span class="badge-icon">🦉</span>
+                  <span class="badge-name">Night Owl</span>
+                </div>
+                <div class="badge-item">
+                  <span class="badge-icon">🧬</span>
+                  <span class="badge-name">Bio Slayer</span>
+                </div>
+                <div class="badge-item">
+                  <span class="badge-icon">⚡</span>
+                  <span class="badge-name">100 Flashcards</span>
+                </div>
+                <div class="badge-item">
+                  <span class="badge-icon">🎯</span>
+                  <span class="badge-name">Perfect Quiz</span>
+                </div>
+                <div class="badge-item">
+                  <span class="badge-icon">📚</span>
+                  <span class="badge-name">Syllabus Master</span>
+                </div>
+                <div class="badge-item">
+                  <span class="badge-icon">👑</span>
+                  <span class="badge-name">14-Day Streak</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 10: RESPONSIBLE AI / ACADEMIC INTEGRITY
+         ======================================================================== -->
+    <section class="section" id="academic-integrity">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Academic Integrity First</span>
+          <h2 class="section-title">Built to build your brain, not bypass it</h2>
+          <p class="section-desc">We know students and educators are tired of cheap AI tools that spit out hallucinated essays and homework shortcuts. Here is our ethical commitment.</p>
+        </div>
+
+        <div class="integrity-grid">
+          <!-- Comparison Card -->
+          <div class="integrity-card-vs">
+            <!-- Cheat Bots (Bad) -->
+            <div class="vs-column vs-bad">
+              <div class="vs-header" style="color: #DC2626;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                <span>Generic "Cheat" Bots</span>
+              </div>
+              <ul class="vs-list">
+                <li class="vs-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  <span>Spits out direct copy-paste essay paragraphs that trigger Turnitin flags.</span>
+                </li>
+                <li class="vs-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  <span>Solves equations instantly with zero explanation, leading to test day failure.</span>
+                </li>
+                <li class="vs-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  <span>Sells your student queries to public training sets and third-party advertisers.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Academic Buddy (Good) -->
+            <div class="vs-column vs-good">
+              <div class="vs-header" style="color: var(--accent-sage);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Academic Buddy (Studi)</span>
+              </div>
+              <ul class="vs-list">
+                <li class="vs-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-sage)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Uses Socratic prompts to help you discover the arguments and write in your own voice.</span>
+                </li>
+                <li class="vs-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-sage)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Breaks math and science into intuitive mental models so you can reproduce them unassisted in timed exams.</span>
+                </li>
+                <li class="vs-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-sage)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>COPPA, FERPA, and GDPR compliant. Zero student data sold or used to train open models.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Integrity Highlights -->
+          <div class="integrity-features-list">
+            <div class="integrity-feature">
+              <div class="integrity-feature-icon">🛡️</div>
+              <div>
+                <h4 style="margin-bottom:0.35rem;">Honor Code Compliant</h4>
+                <p style="font-size: 0.92rem; color: var(--text-secondary);">Teachers love Studi because it acts like an empathetic in-person tutor during office hours—guiding, hinting, and coaching rather than writing assignments.</p>
+              </div>
+            </div>
+
+            <div class="integrity-feature">
+              <div class="integrity-feature-icon">🔒</div>
+              <div>
+                <h4 style="margin-bottom:0.35rem;">Ironclad Privacy For Minors</h4>
+                <p style="font-size: 0.92rem; color: var(--text-secondary);">We enforce strict safety filters, anonymous account options, and zero targeted ads. Under-18 accounts have built-in parental privacy safeguards.</p>
+              </div>
+            </div>
+
+            <div class="integrity-feature">
+              <div class="integrity-feature-icon">📊</div>
+              <div>
+                <h4 style="margin-bottom:0.35rem;">Real Test-Day Performance</h4>
+                <p style="font-size: 0.92rem; color: var(--text-secondary);">When you sit for an in-person closed-book exam, you don't have AI with you. Studi trains your neural pathways so you remember under pressure.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ========================================================================
+         SECTION 13: FAQ ACCORDION (6-8 THOROUGH QUESTIONS)
+         ======================================================================== -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Clear Answers</span>
+          <h2 class="section-title">Frequently asked questions</h2>
+          <p class="section-desc">Everything you need to know about plans, integrity, privacy, and how Studi actually works.</p>
+        </div>
+
+        <div class="faq-accordion-container">
+          <!-- Question 1 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>Is Academic Buddy really free to start?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Yes, 100%! You can create an account, upload lecture slides, ask unlimited questions, generate flashcards, and use the Pomodoro study timer on our generous Free Forever plan with zero credit card required. If you want unlimited PDF OCR and voice tutoring, we offer an optional Student Pro plan for the price of a single coffee per month.
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>Will Studi just do my homework for me?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              No, by design! Studi is trained on cognitive science principles and the Socratic method. If you ask "Give me the answer to question 4", Studi will guide you: "Let's look at what values we have first: what formula connects force, mass, and acceleration?" This ensures you actually master the concepts so you don't freeze on closed-book test days.
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>Is my data private, safe, and FERPA/COPPA compliant?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Absolutely. Your uploads, notes, and study sessions are strictly private to you. We never sell student data to third-party data brokers, and your material is never fed into public foundation models. We comply with COPPA, FERPA, and global GDPR guidelines.
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>Can I use Academic Buddy on my phone or tablet?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Yes! Academic Buddy is fully mobile-first and works seamlessly on iOS Safari, Android Chrome, iPad, tablet, and desktop browsers. You can snap photos of your physical textbook with your phone camera and immediately study flashcards while walking between classes.
+            </div>
+          </div>
+
+          <!-- Question 5 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>What file formats can I upload for summaries?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              You can upload PDF textbooks, PowerPoint (.pptx) slide decks, Word documents (.docx), plain text notes (.txt, .md), and camera image formats (.png, .jpg, .heic) for handwritten whiteboard equations and homework problems.
+            </div>
+          </div>
+
+          <!-- Question 6 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>How does "Late-Night Study" mode protect my eyes?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Our Late-Night Study mode uses a calibrated low-blue-light midnight palette with high-contrast warm text that eliminates harsh screen glare during late-evening study sessions, preserving your natural circadian rhythm.
+            </div>
+          </div>
+
+          <!-- Question 7 -->
+          <div class="faq-item">
+            <button class="faq-question-btn" aria-expanded="false">
+              <span>Can I export flashcards to Anki or Quizlet?</span>
+              <svg class="faq-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              Yes! With one click, any flashcard deck generated by Studi can be exported directly as a CSV, Anki deck (.apkg), or Quizlet-compatible format so you are never locked into our platform.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 14: FINAL CTA BANNER
+         ======================================================================== -->
+    <section class="final-cta-section" id="cta-banner">
+      <div class="container">
+        <div class="cta-banner-box">
+          <div class="cta-banner-content">
+            <span class="brand-badge" style="background: rgba(255,255,255,0.2); color:#FFFFFF; margin-bottom:1rem; border:none;">
+              🚀 No More Midnight Panic
+            </span>
+            <h2>Ready to stop cramming and start understanding?</h2>
+            <p style="font-style: italic;">“Look deep into nature, and then you will understand everything better.” — Albert Einstein</p>
+
+            <form class="cta-form-row" id="cta-capture-form">
+              <input type="email" class="cta-email-input" placeholder="Enter your school or personal email" required aria-label="Student Email">
+              <button type="submit" class="btn btn-peach btn-lg">Start Free Trial →</button>
+            </form>
+
+            <div class="cta-guarantee-text">
+              ✨ Free forever starter plan • No credit card required • Cancel anytime
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       SECTION 15: FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Brand Column -->
+        <div class="footer-brand-col">
+          <a href="#hero" class="brand-logo">
+            <div class="brand-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="4" fill="currentColor"/>
+              </svg>
+            </div>
+            <span>Academic<span class="text-gradient">Buddy</span></span>
+          </a>
+          <p class="footer-brand-desc">
+            The cozy, modern AI study companion that guides high school and college students to genuine mastery without cutting corners.
+          </p>
+          <div style="font-size: 0.82rem; color: var(--text-muted);">
+            Made with ☕ and care for learners worldwide.
+          </div>
+        </div>
+
+        <!-- Product Column -->
+        <div>
+          <h4 class="footer-col-title">Product</h4>
+          <ul class="footer-links-list">
+            <li><a href="#features" class="footer-link">AI Tutor Chat</a></li>
+            <li><a href="#features" class="footer-link">Flashcards &amp; Quizzes</a></li>
+            <li><a href="#features" class="footer-link">Slide &amp; PDF Parser</a></li>
+            <li><a href="#study-modes" class="footer-link">Feynman Teach-Back</a></li>
+            <li><a href="#progress" class="footer-link">Streak &amp; XP Tracker</a></li>
+            <li><a href="#interactive-demo" class="footer-link">Interactive Demo</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources Column -->
+        <div>
+          <h4 class="footer-col-title">Resources</h4>
+          <ul class="footer-links-list">
+            <li><a href="404.html" class="footer-link">Study Tips Blog</a></li>
+            <li><a href="404.html" class="footer-link">Calculus Quick Sheets</a></li>
+            <li><a href="404.html" class="footer-link">AP Exam Countdown 2026</a></li>
+            <li><a href="404.html" class="footer-link">Help Center</a></li>
+            <li><a href="404.html" class="footer-link">Educator Partnerships</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal Column -->
+        <div>
+          <h4 class="footer-col-title">Safety &amp; Legal</h4>
+          <ul class="footer-links-list">
+            <li><a href="#academic-integrity" class="footer-link">Honor Code &amp; AI Ethics</a></li>
+            <li><a href="404.html" class="footer-link">Privacy Policy</a></li>
+            <li><a href="404.html" class="footer-link">Terms of Service</a></li>
+            <li><a href="404.html" class="footer-link">FERPA / COPPA Info</a></li>
+            <li><a href="404.html" class="footer-link">Parent &amp; School Guide</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter Column -->
+        <div>
+          <h4 class="footer-col-title">The Sunday Study Cram</h4>
+          <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 0.85rem;">
+            A quick, 3-minute Sunday email with high-yield exam tips, cognitive study hacks, and zero spam.
+          </p>
+          <form class="footer-newsletter-form" id="footer-newsletter-form">
+            <div class="newsletter-input-group">
+              <input type="email" class="newsletter-input" placeholder="Your email address" required aria-label="Newsletter Email">
+              <button type="submit" class="btn btn-primary btn-sm">Join</button>
+            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Unsubscribe in one click anytime.</span>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom-bar">
+        <div>
+          © 2026 Academic Buddy Technologies, Inc. All rights reserved.
+        </div>
+
+        <!-- Social Icons -->
+        <div class="footer-socials">
+          <!-- Discord -->
+          <a href="404.html" class="social-icon-link" aria-label="Join our Discord study lounge" title="Discord Community">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+          </a>
+          <!-- Twitter / X -->
+          <a href="404.html" class="social-icon-link" aria-label="Follow us on X" title="Twitter / X">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <!-- YouTube -->
+          <a href="404.html" class="social-icon-link" aria-label="Subscribe on YouTube" title="YouTube Study Playlists">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Language Selector -->
+        <select class="language-selector" aria-label="Select Language">
+          <option value="en" selected>🌐 English (US)</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="ja">日本語</option>
+        </select>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       MODAL 1: AUTH MODAL (SIGN UP / LOG IN)
+       ======================================================================== -->
+  <div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close dialog">✕</button>
+      <div class="modal-body">
+        <!-- Tabs -->
+        <div class="modal-tabs">
+          <button class="modal-tab-btn active" data-auth-mode="signup">Sign Up Free</button>
+          <button class="modal-tab-btn" data-auth-mode="login">Log In</button>
+        </div>
+
+        <h3 id="auth-heading" style="text-align: center; margin-bottom: 0.5rem;">Start Studying Smarter with Studi</h3>
+        <p style="text-align: center; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Your personal AI study companion • Free forever starter plan.
+        </p>
+
+        <!-- Social Auth Buttons -->
+        <div class="social-auth-group">
+          <button class="btn-social-auth" type="button" onclick="showToast('⚡ Google OAuth connected! Logging in...')">
+            <!-- Google SVG -->
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <button class="btn-social-auth" type="button" onclick="showToast('🍎 Apple ID connected! Logging in...')">
+            <!-- Apple SVG -->
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-2 .6-2.65 1.35-.56.64-1.05 1.7-0.92 2.73.99.08 2.02-.48 2.65-1.23z"/>
+            </svg>
+            <span>Continue with Apple</span>
+          </button>
+        </div>
+
+        <div class="auth-divider">or continue with email</div>
+
+        <!-- Form -->
+        <form id="auth-form">
+          <div class="form-group" id="auth-name-group">
+            <label class="form-label" for="auth-name">Your Name or Study Handle</label>
+            <input type="text" id="auth-name" class="form-input" placeholder="e.g. Maya Lin" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="auth-email">School or Personal Email</label>
+            <input type="email" id="auth-email" class="form-input" placeholder="student@university.edu" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="auth-password">Password</label>
+            <input type="password" id="auth-password" class="form-input" placeholder="At least 8 characters" minlength="8" required>
+          </div>
+
+          <!-- Minor / Under-16 Protection & Consent -->
+          <div class="form-group-checkbox" id="auth-under-16-wrapper">
+            <label class="checkbox-label">
+              <input type="checkbox" id="auth-is-under-16">
+              <span>I am under 16 years old</span>
+            </label>
+            <div id="parental-consent-box" style="display: none; margin-top: 0.5rem; padding: 0.75rem; background: var(--bg-card-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.8rem;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="auth-parental-consent">
+                <span>My parent or guardian has approved my use of Academic Buddy.</span>
+              </label>
+              <p style="margin-top: 0.35rem; color: var(--text-muted); font-size: 0.76rem;">
+                🛡️ Minors Privacy: Academic Buddy does not sell student data, track across sites, or show personalized ads.
+              </p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.75rem;" id="auth-submit-btn">
+            Create My Free Account
+          </button>
+        </form>
+
+        <p style="text-align: center; font-size: 0.76rem; color: var(--text-muted); margin-top: 1.25rem;">
+          By signing up, you agree to our <a href="404.html" style="text-decoration: underline;">Terms of Service</a> &amp; <a href="404.html" style="text-decoration: underline;">Honor Code</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: ONBOARDING STEPPER MODAL
+       ======================================================================== -->
+  <div class="modal-overlay" id="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboarding-heading">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close dialog">✕</button>
+      <div class="modal-body">
+        <!-- Progress Steps -->
+        <div class="onboarding-progress-bar">
+          <span class="progress-step-pill completed"></span>
+          <span class="progress-step-pill"></span>
+          <span class="progress-step-pill"></span>
+        </div>
+
+        <!-- STEP 1: Grade Level -->
+        <div class="onboarding-step active" id="onboarding-step-1">
+          <span class="section-tag" style="font-size: 0.72rem;">Step 1 of 3</span>
+          <h3 id="onboarding-heading" style="margin-bottom: 0.35rem;">What grade or year are you in?</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">Studi customizes tone, complexity, and curriculum rubrics based on your level.</p>
+
+          <div class="onboarding-options-grid">
+            <div class="onboarding-chip-select selected">High School (9th-10th)</div>
+            <div class="onboarding-chip-select">High School (11th-12th)</div>
+            <div class="onboarding-chip-select">College / Undergrad</div>
+            <div class="onboarding-chip-select">Graduate / Self-Taught</div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Subjects -->
+        <div class="onboarding-step" id="onboarding-step-2">
+          <span class="section-tag" style="font-size: 0.72rem;">Step 2 of 3</span>
+          <h3 style="margin-bottom: 0.35rem;">Which subjects give you the most headaches?</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">Select all that apply to preload relevant study decks.</p>
+
+          <div class="onboarding-options-grid">
+            <div class="onboarding-chip-select selected" data-multiselect="true">📐 Calculus &amp; Math</div>
+            <div class="onboarding-chip-select selected" data-multiselect="true">🧬 Biology / Pre-Med</div>
+            <div class="onboarding-chip-select" data-multiselect="true">🧪 Chemistry &amp; Physics</div>
+            <div class="onboarding-chip-select" data-multiselect="true">💻 Computer Science</div>
+            <div class="onboarding-chip-select" data-multiselect="true">✍️ History &amp; Literature</div>
+            <div class="onboarding-chip-select" data-multiselect="true">🎯 SAT / ACT / AP Prep</div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Goals -->
+        <div class="onboarding-step" id="onboarding-step-3">
+          <span class="section-tag" style="font-size: 0.72rem;">Step 3 of 3</span>
+          <h3 style="margin-bottom: 0.35rem;">What is your #1 study goal right now?</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">We will configure your dashboard widgets and daily study streak targets.</p>
+
+          <div class="onboarding-options-grid">
+            <div class="onboarding-chip-select selected">Ace Upcoming Exams 🏆</div>
+            <div class="onboarding-chip-select">Stop Procrastinating ⏱️</div>
+            <div class="onboarding-chip-select">Understand Deep Concepts 🧠</div>
+            <div class="onboarding-chip-select">Build Daily Study Habits 🔥</div>
+          </div>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.75rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+          <button class="btn btn-ghost btn-sm" id="onboarding-back-btn" style="visibility: hidden;">← Back</button>
+          <button class="btn btn-primary" id="onboarding-next-btn">Continue →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ========================================================================
+       MODAL 4: REPORT RESPONSE (SAFETY & INTEGRITY)
+       ======================================================================== -->
+  <div class="modal-overlay" id="report-modal" role="dialog" aria-modal="true" aria-labelledby="report-modal-heading">
+    <div class="modal-card" style="max-width: 480px;">
+      <button class="modal-close-btn" aria-label="Close dialog" onclick="closeReportModal()">✕</button>
+      <div class="modal-body">
+        <h3 id="report-modal-heading" style="margin-bottom: 0.35rem;">🚩 Report Response</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Help keep Academic Buddy accurate, safe, and academically honest. What was the issue with this response?
+        </p>
+
+        <form id="report-response-form">
+          <input type="hidden" id="report-target-message-id" value="">
+          <div class="report-reasons-group" style="display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1rem;">
+            <label class="radio-label">
+              <input type="radio" name="report-reason" value="Inaccurate or Hallucinated Fact" checked>
+              <span>Inaccurate / Hallucinated concept or formula</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="report-reason" value="Too Direct / Violated Academic Integrity">
+              <span>Too direct / Gave away graded assignment answers</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="report-reason" value="Harmful or Inappropriate Content">
+              <span>Harmful, offensive, or unsafe content</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="report-reason" value="Other">
+              <span>Other issue</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="report-details">Additional details (optional)</label>
+            <textarea id="report-details" class="form-input" rows="2" placeholder="Tell us what went wrong..."></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:0.65rem; margin-top:1rem;">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="closeReportModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Submit Report</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: AI TUTOR STUDY STUDIO WINDOW (FLOATING & FULLSCREEN)
+       ======================================================================== -->
+  <div class="study-window-overlay" id="study-window-overlay" role="dialog" aria-modal="true" aria-label="Studi AI Tutor Studio Window">
+    <div class="study-window-card" id="study-window-card">
+      <!-- Window Title & Control Bar -->
+      <div class="study-window-header">
+        <div class="window-header-left">
+          <div class="chat-window-dots">
+            <button class="window-dot dot-red" id="btn-win-dot-close" title="Close Window (Esc)" aria-label="Close"></button>
+            <button class="window-dot dot-yellow" id="btn-win-dot-min" title="Minimize to Dock" aria-label="Minimize"></button>
+            <button class="window-dot dot-green" id="btn-win-dot-max" title="Toggle Fullscreen" aria-label="Toggle Fullscreen"></button>
+          </div>
+          <div class="window-brand">
+            <span class="studi-avatar-icon">☕</span>
+            <span class="window-brand-title">Studi AI Studio</span>
+            <span class="badge-mini" id="active-mode-badge">LEARN</span>
+          </div>
+        </div>
+
+        <!-- Controls: Study Mode, Depth, Saved Chats, New Chat, Fullscreen Toggle, Close -->
+        <div class="window-header-controls">
+          <!-- Study Mode Custom Dropdown -->
+          <div class="custom-dropdown" id="mode-custom-dropdown">
+            <button type="button" class="dropdown-trigger-btn" id="btn-mode-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="control-label">Mode:</span>
+              <span class="dropdown-current-val" id="mode-current-val">💡 Learn (Socratic)</span>
+              <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <ul class="dropdown-menu-list" id="mode-menu-list" role="listbox">
+              <li class="dropdown-item active" data-value="learn" role="option" aria-selected="true">
+                <span class="dropdown-item-icon">💡</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Learn (Socratic)</span>
+                  <span class="dropdown-item-desc">Step-by-step guidance &amp; check-ins</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="quiz-me" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">⚡</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Quiz Me</span>
+                  <span class="dropdown-item-desc">Active recall with progressive hints</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="teach-it-back" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">🗣️</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Teach It Back</span>
+                  <span class="dropdown-item-desc">Spot gaps in your understanding</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="exam-crunch" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">🔥</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Exam Crunch</span>
+                  <span class="dropdown-item-desc">High-yield cramming &amp; practice sets</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="chill-review" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">🎧</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Chill Review</span>
+                  <span class="dropdown-item-desc">Relaxed recap with simple analogies</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+            </ul>
+            <!-- Hidden synced select for accessibility and script compatibility -->
+            <select id="active-study-mode-select" class="visually-hidden" aria-hidden="true" tabindex="-1">
+              <option value="learn" selected>💡 Learn (Socratic)</option>
+              <option value="quiz-me">⚡ Quiz Me</option>
+              <option value="teach-it-back">🗣️ Teach It Back</option>
+              <option value="exam-crunch">🔥 Exam Crunch</option>
+              <option value="chill-review">🎧 Chill Review</option>
+            </select>
+          </div>
+
+          <!-- Explain-It-Simply Depth Custom Dropdown -->
+          <div class="custom-dropdown" id="depth-custom-dropdown">
+            <button type="button" class="dropdown-trigger-btn" id="btn-depth-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="control-label">Depth:</span>
+              <span class="dropdown-current-val" id="depth-current-val">Standard</span>
+              <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <ul class="dropdown-menu-list" id="depth-menu-list" role="listbox">
+              <li class="dropdown-item active" data-value="off" role="option" aria-selected="true">
+                <span class="dropdown-item-icon">🎯</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Standard</span>
+                  <span class="dropdown-item-desc">Balanced explanation depth</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="middle_school" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">🌱</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">Middle School</span>
+                  <span class="dropdown-item-desc">Simple vocabulary &amp; everyday analogies</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="high_school" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">📚</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">High School / AP</span>
+                  <span class="dropdown-item-desc">AP exam rigor &amp; core terminology</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+              <li class="dropdown-item" data-value="college" role="option" aria-selected="false">
+                <span class="dropdown-item-icon">🎓</span>
+                <div class="dropdown-item-body">
+                  <span class="dropdown-item-title">College / Rigorous</span>
+                  <span class="dropdown-item-desc">Theoretical depth &amp; mathematical rigor</span>
+                </div>
+                <span class="dropdown-item-check">✓</span>
+              </li>
+            </ul>
+            <!-- Hidden synced select for accessibility and script compatibility -->
+            <select id="active-explain-level-select" class="visually-hidden" aria-hidden="true" tabindex="-1">
+              <option value="off" selected>Standard</option>
+              <option value="middle_school">Middle School</option>
+              <option value="high_school">High School / AP</option>
+              <option value="college">College / Rigorous</option>
+            </select>
+          </div>
+
+          <button class="btn btn-secondary btn-sm" id="btn-toggle-sidebar" title="Toggle Saved Conversations">
+            <span>📂 Saved Chats</span>
+            <span class="badge-mini" id="chats-count-badge">0</span>
+          </button>
+
+          <button class="btn btn-primary btn-sm" id="btn-new-chat-session" title="Start a fresh study chat">
+            <span>+ New Chat</span>
+          </button>
+
+          <div class="studio-status-pill" id="studio-status-indicator">
+            <span class="pulse-dot"></span>
+            <span id="studio-status-text">Live</span>
+          </div>
+
+          <div class="window-action-buttons">
+            <button class="btn-win-action" id="btn-toggle-fullscreen" title="Toggle Fullscreen Mode (⛶)" aria-label="Toggle Fullscreen">
+              <svg class="icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+              <svg class="icon-compress" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:none;"><path d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M10 4v6m0 0H4m6 0L3 3m10 7V4m0 6h6m-6 0l7-7"></path></svg>
+              <span class="btn-fs-label">Fullscreen</span>
+            </button>
+            <button class="btn-win-action" id="btn-close-study-window" title="Close Window (Esc)" aria-label="Close Window">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Studio Main Work Area (Sidebar + Chat Viewport) -->
+      <div class="studio-workspace">
+        <!-- Left Sidebar: Conversations Drawer -->
+        <aside class="studio-sidebar" id="studio-sidebar" aria-label="Saved Study Sessions">
+          <div class="sidebar-header">
+            <h4>Your Study Sessions</h4>
+            <button class="btn-icon-subtle" id="btn-close-sidebar" aria-label="Close Sidebar">✕</button>
+          </div>
+          <div class="conversations-list" id="conversations-list-container">
+            <div class="empty-conversations-state">
+              <span>No saved chats yet. Send a question to create your first session!</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center: Chat Viewport -->
+        <div class="studio-chat-viewport">
+          <!-- Suggested Prompt Chips -->
+          <div class="studio-quick-chips" id="studio-quick-chips">
+            <span class="picker-label">Try asking:</span>
+            <button class="demo-prompt-chip" data-prompt="Explain Mitochondria and ATP synthesis using an everyday analogy">🧬 Mitochondria &amp; ATP</button>
+            <button class="demo-prompt-chip" data-prompt="Why does the Chain Rule in Calculus make intuitive sense? Explain with bike gears">📐 Calculus Chain Rule</button>
+            <button class="demo-prompt-chip" data-prompt="Help me strengthen this thesis statement: 'The Industrial Revolution changed things for workers.'">📜 History Thesis Doctor</button>
+            <button class="demo-prompt-chip" data-prompt="Why does my recursive function hit RecursionError? What is a base case?">🐍 Python Recursion</button>
+            <button class="btn-chips-close" id="btn-close-quick-chips" title="Close suggested topics tab" aria-label="Close suggested topics tab">✕</button>
+          </div>
+
+          <!-- Scrollable Messages Container -->
+          <div class="chat-messages-container" id="chat-messages-container" aria-live="polite">
+            <!-- Welcome Message -->
+            <div class="chat-msg msg-studi" data-message-id="welcome-msg">
+              <div class="msg-header">
+                <div class="msg-author-info">
+                  <span class="msg-avatar-icon">☕</span>
+                  <strong>Studi</strong>
+                  <span class="badge-mini">AI Tutor</span>
+                </div>
+                <div class="msg-actions">
+                  <button class="btn-msg-action" title="Report response" onclick="openReportModal('welcome-msg')">🚩</button>
+                </div>
+              </div>
+              <div class="msg-content">
+                <p>Hey there! I'm <strong>Studi</strong>, your 24/7 AI pair-learner. I can help you understand tough concepts step-by-step, quiz your memory, or review lecture slides without just dumping answers.</p>
+                <p style="margin-top:0.4rem;">What are you studying today? Pick a topic chip above or type your question below!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Streaming Indicator & Controls -->
+          <div class="chat-live-controls" id="chat-live-controls">
+            <div class="typing-indicator" id="studio-typing-indicator" style="display: none;">
+              <div class="typing-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="typing-text">Studi is thinking &amp; streaming...</span>
+            </div>
+
+            <div class="chat-action-buttons">
+              <button class="btn btn-secondary btn-sm" id="btn-stop-stream" style="display: none;" title="Stop AI generation">
+                <span>⏹️ Stop Generating</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-retry-stream" style="display: none;" title="Retry last message">
+                <span>🔄 Retry Explanation</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form class="studio-input-form" id="studio-chat-form">
+            <div class="studio-input-wrapper">
+              <textarea
+                id="studio-user-input"
+                class="studio-textarea"
+                placeholder="Ask Studi anything... (Shift + Enter for new line, Enter to send)"
+                rows="1"
+                maxlength="3000"
+                required
+              ></textarea>
+              <div class="input-bottom-row">
+                <span class="char-count" id="char-counter">0 / 3000</span>
+                <button type="submit" class="btn btn-primary btn-sm btn-send" id="btn-send-chat" title="Send (Enter)">
+                  <span>Send</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       FLOATING TUTOR LAUNCHER DOCK (BOTTOM-RIGHT)
+       ======================================================================== -->
+  <button class="floating-study-launcher" id="btn-floating-study-launcher" aria-label="Open Studi AI Study Buddy Window" title="Open AI Study Window">
+    <div class="floating-avatar-box">
+      <span class="floating-avatar-emoji">☕</span>
+      <span class="floating-pulse-badge"></span>
+    </div>
+    <div class="floating-label-box">
+      <span class="floating-label-title">Study with Studi</span>
+      <span class="floating-label-sub">Live AI Tutor • Window &amp; Fullscreen</span>
+    </div>
+  </button>
+
+  <!-- ========================================================================
+       COOKIE / CONSENT BANNER
+       ======================================================================== -->
+  <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie Preferences">
+    <div class="cookie-content">
+      <div class="cookie-icon">🍪</div>
+      <div class="cookie-text">
+        We respect student privacy. We only use functional cookies to remember your late-night study theme and active study streak. No invasive tracking or selling data.
+      </div>
+    </div>
+    <div class="cookie-actions">
+      <button class="btn btn-ghost btn-sm" id="cookie-settings-btn">Essential Only</button>
+      <button class="btn btn-primary btn-sm" id="cookie-accept-btn">Got It!</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

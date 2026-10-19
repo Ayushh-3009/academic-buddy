@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment variables & secrets (CRITICAL: Never commit API keys!)
+.env
+.env*.local
+
+# Database & SQLite files
+data/*.sqlite
+data/*.sqlite-journal
+*.sqlite
+*.sqlite-journal
+
+# Vercel build & cache
+.vercel/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
