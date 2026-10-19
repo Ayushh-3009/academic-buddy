@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Lost Notes | Academic Buddy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Minimal Nav -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+          </svg>
+        </div>
+        <span>Academic<span class="text-gradient">Buddy</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" aria-label="Toggle Theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="index.html" class="btn btn-secondary btn-sm">← Back to Study Desk</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-404-wrapper">
+    <div class="page-404-card">
+      <div class="illustration-404">🎒☕📖</div>
+      <div class="code-404">ERROR 404 • CONCEPT NOT FOUND</div>
+      <h1 style="font-size: clamp(1.8rem, 4vw, 2.4rem); margin-bottom: 0.75rem;">
+        Looks like these notes got lost at the bottom of your backpack...
+      </h1>
+      <p style="margin-bottom: 2rem;">
+        Even Studi's neural networks couldn't locate this page. Maybe the link was eaten by your neighbor's dog, or perhaps you took a wrong turn in the library stacks.
+      </p>
+
+      <!-- Quick Search / Re-orient -->
+      <div style="max-width: 440px; margin: 0 auto 2rem auto; display: flex; gap: 0.5rem;">
+        <input type="text" class="form-input" placeholder="Search a subject (e.g. Calculus, Bio, SAT)..." id="search-input" style="flex: 1;">
+        <button class="btn btn-primary" onclick="handleSearch()">Search</button>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div style="display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap;">
+        <a href="index.html" class="btn btn-primary">
+          <span>Return Home</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </a>
+        <a href="index.html#interactive-demo" class="btn btn-secondary">
+          <span>Try Flashcard Deck</span>
+        </a>
+        <a href="index.html#faq" class="btn btn-ghost">
+          <span>Read FAQ</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    function handleSearch() {
+      const q = document.getElementById('search-input').value.trim();
+      if (q) {
+        window.location.href = `index.html#subjects`;
+      } else {
+        showToast('💡 Type a topic above to explore our subject guides!');
+      }
+    }
+  </script>
+</body>
+</html>

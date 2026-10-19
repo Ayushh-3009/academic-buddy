@@ -3,6 +3,7 @@
  * Serves static landing page, Auth API, and SSE Chat API.
  */
 
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -17,9 +18,20 @@ const app = express();
 // Security: Disallow sensitive header inspection
 app.disable('x-powered-by');
 
-// CORS configuration
+// CORS configuration - dynamic origin support for Vercel, localhost, and custom domains
 app.use(cors({
-  origin: config.nodeEnv === 'production' ? config.clientUrl : true,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      config.nodeEnv !== 'production' ||
+      origin === config.clientUrl ||
+      origin.endsWith('.vercel.app') ||
+      origin.includes('localhost')
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Guest-Id', 'X-Grade-Level'],
@@ -50,7 +62,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve frontend static files
+// Serve frontend static files (check public directory first, then root)
+app.use(express.static(path.resolve(__dirname, 'public'), {
+  extensions: ['html', 'htm'],
+  maxAge: config.nodeEnv === 'production' ? '1d' : '0',
+}));
 app.use(express.static(path.resolve(__dirname), {
   extensions: ['html', 'htm'],
   maxAge: config.nodeEnv === 'production' ? '1d' : '0',
@@ -63,7 +79,10 @@ app.use('/api', (req, res) => {
 
 // Fallback to 404.html for unmatched page requests
 app.use((req, res) => {
-  res.status(404).sendFile(path.resolve(__dirname, '404.html'));
+  const public404 = path.resolve(__dirname, 'public', '404.html');
+  const root404 = path.resolve(__dirname, '404.html');
+  const target404 = fs.existsSync(public404) ? public404 : root404;
+  res.status(404).sendFile(target404);
 });
 
 // Centralized error handler (Never leak stack traces in responses)
