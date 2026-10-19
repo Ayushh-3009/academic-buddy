@@ -8,14 +8,19 @@ const fs = require('fs');
 const path = require('path');
 const initSqlJs = require('sql.js');
 const config = require('../config/config');
+const { SCHEMA_SQL } = require('./schema');
 
 let dbInstance = null;
 const dbFilePath = config.databasePath;
 
 // Ensure database directory exists
-const dbDir = path.dirname(dbFilePath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+try {
+  const dbDir = path.dirname(dbFilePath);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Could not ensure db directory:', err.message);
 }
 
 /**
@@ -28,7 +33,7 @@ function persistToDisk() {
     const buffer = Buffer.from(data);
     fs.writeFileSync(dbFilePath, buffer);
   } catch (err) {
-    console.error('Failed to persist database to disk:', err.message);
+    console.warn('Failed to persist database to disk:', err.message);
   }
 }
 
@@ -38,21 +43,36 @@ function persistToDisk() {
 async function getDb() {
   if (dbInstance) return dbInstance;
 
-  const SQL = await initSqlJs();
+  // Search candidate paths for sql-wasm.wasm
+  const wasmCandidates = [
+    path.join(__dirname, 'sql-wasm.wasm'),
+    path.resolve(__dirname, '../../node_modules/sql.js/dist/sql-wasm.wasm'),
+    path.resolve(__dirname, '../node_modules/sql.js/dist/sql-wasm.wasm'),
+  ];
+  const foundWasm = wasmCandidates.find(p => fs.existsSync(p));
+
+  const SQL = await initSqlJs(foundWasm ? {
+    locateFile: () => foundWasm
+  } : undefined);
 
   if (fs.existsSync(dbFilePath)) {
-    const fileBuffer = fs.readFileSync(dbFilePath);
-    dbInstance = new SQL.Database(fileBuffer);
+    try {
+      const fileBuffer = fs.readFileSync(dbFilePath);
+      dbInstance = new SQL.Database(fileBuffer);
+    } catch (err) {
+      console.warn('Could not read existing DB file, creating fresh DB:', err.message);
+      dbInstance = new SQL.Database();
+    }
   } else {
     dbInstance = new SQL.Database();
   }
 
-  // Run schema migration
-  const schemaPath = path.join(__dirname, 'schema.sql');
-  if (fs.existsSync(schemaPath)) {
-    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-    dbInstance.run(schemaSql);
+  // Always run schema migration to guarantee all tables exist
+  try {
+    dbInstance.run(SCHEMA_SQL);
     persistToDisk();
+  } catch (err) {
+    console.error('Schema migration error:', err.message);
   }
 
   return dbInstance;

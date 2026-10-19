@@ -52,11 +52,31 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/user', userRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  let dbStatus = 'disconnected';
+  let dbError = null;
+  let tablesCount = 0;
+  try {
+    const d = await db.getDb();
+    if (d) {
+      const rows = await db.query("SELECT name FROM sqlite_master WHERE type='table'");
+      dbStatus = 'connected';
+      tablesCount = rows.length;
+    }
+  } catch (err) {
+    dbStatus = 'error';
+    dbError = err.message;
+  }
+
   res.json({
     status: 'ok',
     service: 'Academic Buddy Backend',
     timestamp: new Date().toISOString(),
+    database: {
+      status: dbStatus,
+      tablesCount,
+      error: dbError,
+    },
     geminiConfigured: Boolean(config.gemini.apiKey),
     model: config.gemini.model,
   });
