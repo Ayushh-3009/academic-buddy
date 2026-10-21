@@ -122,6 +122,10 @@ It looks like the server is running, but the \`GEMINI_API_KEY\` hasn't been set 
     } catch (err) {
       console.warn(`Model ${modelName} stream failed: ${err.message}. Trying next candidate if available...`);
       lastError = err;
+      if (fullAccumulatedText) {
+        // If text was already streamed to the student, do not replay another model on top
+        break;
+      }
     }
   }
 

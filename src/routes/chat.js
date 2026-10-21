@@ -83,7 +83,7 @@ router.post('/stream', optionalAuth, rateLimiterMiddleware, validateChatInput, a
   if (moderation.isCrisis) {
     // Crisis response: Return immediately and don't forward to general LLM
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
       'X-Accel-Buffering': 'no',
@@ -143,7 +143,7 @@ The student appears to be asking for direct completion of an assignment. DO NOT 
 
     // 6. Set up SSE Headers
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
       'X-Accel-Buffering': 'no',

@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------------------------------------------------------------------------
   // 5. MARKDOWN & KATEX RENDERING HELPERS
   // ------------------------------------------------------------------------
-  function renderMarkdownAndMath(containerElement, rawText) {
+  function renderMarkdownAndMath(containerElement, rawText, isStreaming = false) {
     if (!containerElement) return;
 
     // 1. Render Markdown with marked.js
@@ -129,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
       containerElement.innerHTML = marked.parse(rawText);
     } else {
       containerElement.innerText = rawText;
+    }
+
+    // During active token streaming, defer heavy math parsing and DOM code wrapping until completion
+    if (isStreaming) {
+      return;
     }
 
     // 2. Render Math with KaTeX
@@ -855,7 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Handle token delta
             if (parsed.token) {
               accumulatedText += parsed.token;
-              renderMarkdownAndMath(contentTarget, accumulatedText);
+              renderMarkdownAndMath(contentTarget, accumulatedText, true);
               chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
             }
 
